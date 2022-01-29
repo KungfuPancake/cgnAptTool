@@ -12,7 +12,7 @@ Run the docker container with the appropiate environment variables, e.g.
 `docker run --rm -it -e APT_SALUTATION=m -e APT_FIRST_NAME=John -e APT_LAST_NAME=Doe -e APT_MAIL="dummy@mail.com" -e APT_PHONE=1337 -e APT_MAX_DAYS_AHEAD=14 cgn_apt_tool`
 
 ## Known bugs & limitations
-This is a work and progress and some features do not work yet. Most importantly:
+This is a work in progress and some features do not work yet. Most importantly:
 - You can not set the desired days/timespans yet, they are hardcoded to every day between 8am and 8pm
 - You can not configure the desired locations yet, they are hardcoded to every location
 - You can not configure the required services yet, they are hardcoded to "Personalausweis"
