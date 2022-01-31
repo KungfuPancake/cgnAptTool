@@ -138,6 +138,6 @@ while True:
             book_appointment(a)
             exit(0)
     except httpx.RequestError:
-        print("${0}: An error occured, discarding session")
+        print("${0}: An error occured, discarding session".format(datetime.now()))
 
     sleep(30)
