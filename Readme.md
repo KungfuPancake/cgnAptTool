@@ -7,15 +7,17 @@ Booking an appointment to get a new ID or some other work done at the administra
 This tool will check the unwieldy calendar tool Cologne uses to automatically check for and make appointments. You just set the possible weekdays, the timespan for each day, your personal info and the desired amount of days to check ahead and the tool will check for appointments and book the first available that fits your criteria.
 
 ## Usage
-Run the docker container with the appropiate environment variables, e.g.
+Create your own config file by duplicating the example. Please check everything, as there is no validation right now.
+If using Docker:
 
-`docker run --rm -it -e APT_SALUTATION=m -e APT_FIRST_NAME=John -e APT_LAST_NAME=Doe -e APT_MAIL="dummy@mail.com" -e APT_PHONE=1337 -e APT_MAX_DAYS_AHEAD=14 cgn_apt_tool`
+`docker run -d --rm -v /root/config.yml:/app/config.yml cgn_apt_tool`
+
+You can also run the script directly. Your config.yml needs to be in the current directory. Please make sure that all dependencies are available by running
+`pip install -r requirements.txt`
+
+After that you can run the script with
+`python3 app/main.py`
 
 ## Known bugs & limitations
 This is a work in progress and some features do not work yet. Most importantly:
-- You can not set the desired days/timespans yet, they are hardcoded to every day between 8am and 8pm
-- You can not configure the desired locations yet, they are hardcoded to every location
-- You can not configure the required services yet, they are hardcoded to "Personalausweis"
 - Errors are not handled yet
-
-All hardcoded values can be changed in the code. Check the comments for the relevant UUIDs
