@@ -132,9 +132,12 @@ def extract_appointments(elements: list, ws_id: str) -> list[Appointment]:
 
 
 while True:
-    a = find_appointment()
-    if a:
-        book_appointment(a)
-        exit(0)
+    try:
+        a = find_appointment()
+        if a:
+            book_appointment(a)
+            exit(0)
+    except httpx.RequestError:
+        print("${0}: An error occured, discarding session")
 
     sleep(30)
