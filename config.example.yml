@@ -1,0 +1,82 @@
+salutation: m # possible salutations: m, w, d (currently deactivated), n (Guten Tag)
+first_name: John
+last_name: Doe
+mail: john@doe.org
+phone: 1337
+
+# 0 = monday, 6 = saturday
+ranges:
+  - weekday: 0
+    begin: "16:30"
+    end: "20:00"
+  - weekday: 1
+    begin: "16:30"
+    end: "20:00"
+  - weekday: 2
+    begin: "16:30"
+    end: "20:00"
+  - weekday: 3
+    begin: "16:30"
+    end: "20:00"
+  - weekday: 4
+    begin: "16:30"
+    end: "20:00"
+  - weekday: 5
+    begin: "16:30"
+    end: "20:00"
+
+max_days_ahead: 14
+min_days_ahead: 0
+
+# Locations
+# UUID                                  Name
+# 3557740d-2fb2-4e56-b93b-47023d416c97  Kundenzentrum Chorweiler
+# 119cd015-75ca-4c77-a3f9-b2e183ce0ccd  Kundenzentrum Ehrenfeld
+# adef3f58-20bc-465d-9879-608ac5894295  Kundenzentrum Innenstadt
+# 12889773-9d8b-4be5-997d-931def4e0319  Kundenzentrum Kalk
+# d34bc259-3430-4ebe-8293-f488376bc5f1  Kundenzentrum Lindenthal
+# 393a5db2-d4c3-4e22-9065-df9b453ba46a  Kundenzentrum Mülheim
+# 94494140-f83a-46c8-ab29-26589a9f597c  Kundenzentrum Nippes
+# 853106c1-0bf8-4e08-b308-eaae6f669a9f  Kundenzentrum Porz
+# b3e10f8d-3c54-44d5-b06e-21b8699ea52b  Kundenzentrum Rodenkirchen
+# dae8f2d2-f54a-4313-bd37-136c6836cb14  Temporäre Ausweis- und Meldestelle Kalk
+
+locations:
+  - 3557740d-2fb2-4e56-b93b-47023d416c97
+  - 119cd015-75ca-4c77-a3f9-b2e183ce0ccd
+  - adef3f58-20bc-465d-9879-608ac5894295
+  - 12889773-9d8b-4be5-997d-931def4e0319
+  - d34bc259-3430-4ebe-8293-f488376bc5f1
+  - 393a5db2-d4c3-4e22-9065-df9b453ba46a
+  - 94494140-f83a-46c8-ab29-26589a9f597c
+  - 853106c1-0bf8-4e08-b308-eaae6f669a9f
+  - b3e10f8d-3c54-44d5-b06e-21b8699ea52b
+  - dae8f2d2-f54a-4313-bd37-136c6836cb14
+
+
+# Service Request Types
+# UUID                                  Name                                                                    Max Amount
+# Ausweiswesen
+# e1d5bacf-1498-44c6-9489-2dbc7e322dec  Befreiung - Ausweispflicht                                              2
+# 44db93c7-379d-41b1-a06d-11820b1b71eb  Kinderreisepass - Antrag                                                5
+# d29a92ab-4112-40c5-b772-427ce186cc35  Personalausweis - Antrag                                                5
+# d1c1e4d7-44a6-434d-884c-6aa1fe43d7a1  Reisepass - Antrag                                                      5
+
+# Meldewesen
+# 58f5b5d5-4400-4d21-86bb-ae57bb6dc78a  Abmeldung                                                               10
+# 0d2f4ea5-74f2-4699-b954-8907a1ca5f80  Anmeldung                                                               10
+# d528518e-95c3-4dd8-850f-2db689fe0551  Erklärung zum Nebenwohnsitz                                             5
+# 2307dc91-2bca-4b30-a8ac-eb1a03b4b3a2  Konfessionsänderung                                                     2
+# b9028f0e-2b37-41c1-9176-966da3823e88  Ummeldung Wohnsitz                                                      10
+
+# Sonstiges
+# 24194702-ab60-4ea0-9c64-647797f5267b  Anschrift in Fahrzeugpapieren ändern (nur bei Umzug innerhalb Kölns).   10
+# 638de2ae-20e3-4902-be70-aacd9e314fd1  Anwohnerschutzkonzept (nur in Lindenthal)                               5
+# 179c690a-ef74-46c8-a6a3-d65269729601  Bewohnerparkausweis                                                     5
+# e9e6d2eb-67ae-4e09-aa06-56b37d1b3467  Hausauskünfte für Vermieter                                             2
+# 057d9cf7-3d7b-4d40-a578-f4ed2e2432b2  Kfz stilllegen                                                          2
+# 631bf247-a668-48b0-9f05-015322f379bb  Personenstandsänderung                                                  5
+
+services:
+  - type: d29a92ab-4112-40c5-b772-427ce186cc35
+    amount: 1

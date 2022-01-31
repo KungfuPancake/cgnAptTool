@@ -11,11 +11,4 @@ RUN pip install -r requirements.txt
 
 COPY ./app .
 
-ENV APT_SALUTATION=""
-ENV APT_FIRST_NAME=""
-ENV APT_LAST_NAME=""
-ENV APT_MAIL=""
-ENV APT_PHONE=""
-ENV APT_MAX_DAYS_AHEAD="14"
-
 ENTRYPOINT python3 main.py
