@@ -73,6 +73,7 @@ def find_appointment() -> Optional[Appointment]:
 
     valid_appointments = []
     for appointment in appointments:
+        print("{0}: Appointment at {1} in {2}".format(datetime.now(), appointment.date, appointment.location))
         for valid_range in valid_ranges:
             if appointment.date.date() > (date.today() + timedelta(days=max_days_ahead)):
                 # appointment is too far in the future
