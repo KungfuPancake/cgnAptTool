@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 
 from app_types import DayRange, Appointment
 
-config = yaml.safe_load(open('app/config.yml'))
+config = yaml.safe_load(open('config.yml'))
 
 base_url = 'https://termine.stadt-koeln.de/m/kundenzentren/extern/calendar'
 calendar_uid = 'b5a5a394-ec33-4130-9af3-490f99517071'
