@@ -1,3 +1,4 @@
+import logging
 import re
 from datetime import datetime, time, date, timedelta
 from time import sleep
@@ -9,6 +10,8 @@ import yaml
 from bs4 import BeautifulSoup
 
 from app_types import DayRange, Appointment
+
+logger = logging.getLogger()
 
 config = yaml.safe_load(open('config.yml'))
 
@@ -50,7 +53,7 @@ def find_appointment() -> Optional[Appointment]:
     }
     for service in services:
         request_data['services'].append(service['type'])
-        request_data['service_{0}_amount'.format(service['type'])] = service['amount']
+        request_data[f"service_{service['type']}_amount"] = service['amount']
 
     request = httpx.post(base_url + '?' + urlencode({'uid': calendar_uid, 'wsid': ws_id}), data=request_data)
 
@@ -73,7 +76,6 @@ def find_appointment() -> Optional[Appointment]:
 
     valid_appointments = []
     for appointment in appointments:
-        print("{0}: Appointment at {1} in {2}".format(datetime.now(), appointment.date, appointment.location))
         for valid_range in valid_ranges:
             if appointment.date.date() > (date.today() + timedelta(days=max_days_ahead)):
                 # appointment is too far in the future
@@ -88,9 +90,10 @@ def find_appointment() -> Optional[Appointment]:
                 continue
 
             if valid_range.start_time < appointment.date.time() < valid_range.end_time:
+                logger.info(f"Fitting appointment at {appointment.date} in {appointment.location}")
                 valid_appointments.append(appointment)
 
-    print('{0}: Found {1} free slots, {2} do fit'.format(datetime.now(), len(appointments), len(valid_appointments)))
+    logger.info(f"Found {len(appointments)} possible appointments, {len(valid_appointments)} do fit")
 
     if len(valid_appointments) > 0:
         return valid_appointments[0]
@@ -115,7 +118,7 @@ def book_appointment(appointment: Appointment):
         'accept_data_privacy': 1
     }, follow_redirects=True)
 
-    print('{0}: Booked an appointment for {1}, please check your mails!'.format(datetime.now(), appointment.date))
+    logger.info(f"Booked an appointment for {appointment.date}, please check your mails!")
 
 
 def extract_appointments(elements: list, ws_id: str) -> list[Appointment]:
@@ -138,6 +141,6 @@ while True:
             book_appointment(a)
             exit(0)
     except httpx.RequestError:
-        print("{0}: An error occured, discarding session".format(datetime.now()))
+        logger.error("An error occured, discarding session")
 
     sleep(30)
