@@ -94,7 +94,6 @@ def find_appointment() -> Optional[Appointment]:
                 logger.info(f"Fitting appointment at {appointment.date} in {appointment.location}")
                 valid_appointments.append(appointment)
 
-    print(appointments)
     logger.info(f"Found {len(appointments)} possible appointments, {len(valid_appointments)} do fit")
 
     if len(valid_appointments) > 0:
