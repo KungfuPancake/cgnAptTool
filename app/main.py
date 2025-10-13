@@ -9,6 +9,7 @@ from dateutil.parser import parse
 import httpx
 import yaml
 from bs4 import BeautifulSoup
+from httpx import Timeout
 
 from app_types import DayRange, Appointment
 
@@ -41,7 +42,7 @@ services = config['services']
 
 
 def find_appointment() -> Optional[Appointment]:
-    request = httpx.get(base_url + '?' + urlencode({'uid': calendar_uid}), follow_redirects=True)
+    request = httpx.get(base_url + '?' + urlencode({'uid': calendar_uid}), follow_redirects=True, timeout=Timeout(60.0))
     ws_id = request.url.params.get('wsid')
 
     request_data = {
@@ -56,7 +57,7 @@ def find_appointment() -> Optional[Appointment]:
         request_data['services'].append(service['type'])
         request_data[f"service_{service['type']}_amount"] = service['amount']
 
-    request = httpx.post(base_url + '?' + urlencode({'uid': calendar_uid, 'wsid': ws_id}), data=request_data)
+    request = httpx.post(base_url + '?' + urlencode({'uid': calendar_uid, 'wsid': ws_id}), data=request_data, timeout=Timeout(60.0))
 
     soup = BeautifulSoup(request.text, 'html.parser')
     token_element = soup.find(attrs={'name': '__RequestVerificationToken'})
@@ -69,7 +70,7 @@ def find_appointment() -> Optional[Appointment]:
         'step_current_index': 1,
         'step_goto': '+1',
         'locations': locations
-    })
+    }, timeout=Timeout(60.0))
 
     soup = BeautifulSoup(request.text, 'html.parser')
     appointment_elements = soup.find_all('button', {'class': 'card'})
@@ -107,7 +108,7 @@ def book_appointment(appointment: Appointment):
     httpx.get(base_url + '/booking' + '?' + urlencode(
         {'uid': calendar_uid, 'wsid': appointment.ws_id, 'rev': 'ZM3uj', 'appointment_datetime': appointment.date_raw,
          'appointment_duration': appointment.duration, 'location': appointment.location,
-         'resources': appointment.resources}))
+         'resources': appointment.resources}), timeout=Timeout(60.0))
 
     request = httpx.post(base_url + '/booking' + '?' + urlencode(
         {'uid': calendar_uid, 'wsid': appointment.ws_id, 'rev': 'ZM3uj', 'appointment_datetime': appointment.date_raw,
@@ -120,7 +121,7 @@ def book_appointment(appointment: Appointment):
         'mail': mail,
         'phone': phone,
         'accept_data_privacy': 1
-    }, follow_redirects=True)
+    }, follow_redirects=True, timeout=Timeout(60.0))
 
     logger.info(f"Booked an appointment for {appointment.date}, please check your mails!")
 
