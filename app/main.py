@@ -4,6 +4,7 @@ from datetime import datetime, time, date, timedelta
 from time import sleep
 from typing import Optional
 from urllib.parse import unquote, urlencode
+from dateutil.parser import parse
 
 import httpx
 import yaml
@@ -93,6 +94,7 @@ def find_appointment() -> Optional[Appointment]:
                 logger.info(f"Fitting appointment at {appointment.date} in {appointment.location}")
                 valid_appointments.append(appointment)
 
+    print(appointments)
     logger.info(f"Found {len(appointments)} possible appointments, {len(valid_appointments)} do fit")
 
     if len(valid_appointments) > 0:
@@ -103,12 +105,15 @@ def find_appointment() -> Optional[Appointment]:
 
 def book_appointment(appointment: Appointment):
     # this appointment fits
-    httpx.get(base_url + '/booking' + '?' + urlencode({'uid': calendar_uid, 'wsid': appointment.ws_id, 'rev': 'J6A0g', 'appointment_datetime': appointment.date_raw,
-                                                       'appointment_duration': appointment.duration, 'location': appointment.location, 'resources': appointment.resources}))
+    httpx.get(base_url + '/booking' + '?' + urlencode(
+        {'uid': calendar_uid, 'wsid': appointment.ws_id, 'rev': 'ZM3uj', 'appointment_datetime': appointment.date_raw,
+         'appointment_duration': appointment.duration, 'location': appointment.location,
+         'resources': appointment.resources}))
 
-    request = httpx.post(base_url + '/booking' + '?' + urlencode({'uid': calendar_uid, 'wsid': appointment.ws_id, 'rev': 'J6A0g', 'appointment_datetime': appointment.date_raw,
-                                                                  'appointment_duration': appointment.duration, 'location': appointment.location,
-                                                                  'resources': appointment.resources}), data={
+    request = httpx.post(base_url + '/booking' + '?' + urlencode(
+        {'uid': calendar_uid, 'wsid': appointment.ws_id, 'rev': 'ZM3uj', 'appointment_datetime': appointment.date_raw,
+         'appointment_duration': appointment.duration, 'location': appointment.location,
+         'resources': appointment.resources}), data={
         'action_type': 'booking',
         'salutation': salutation,
         'first_name': first_name,
@@ -123,13 +128,17 @@ def book_appointment(appointment: Appointment):
 
 def extract_appointments(elements: list, ws_id: str) -> list[Appointment]:
     appointments = []
-    for appointment_element in elements:
-        if 'appointment_reserve' not in appointment_element['onclick']:
+    for card_appointment_element in elements:
+        if not str(card_appointment_element['id']).startswith('slot_'):
             continue
 
-        parts = re.match(r"appointment_reserve\('([^']+)'[^']+'([^']+)'[^']+'([^']+)'[^']+'([^']+)'", appointment_element['onclick'])
-        date_raw = unquote(parts[1])
-        appointments.append(Appointment(datetime.strptime(date_raw[0:19], '%Y-%m-%dT%H:%M:%S'), date_raw, int(parts[2]), parts[3], parts[4], ws_id))
+        date_raw = card_appointment_element.strong['data-slot-from']
+        actual_date = parse(date_raw)
+
+        parts = re.match(r".*appointment_reserve\('([^']+)'[^']+'([^']+)'[^']+'([^']+)'[^']+'([^']+)'",
+                         card_appointment_element['onclick'])
+
+        appointments.append(Appointment(actual_date, date_raw, int(parts[2]), parts[3], parts[4], ws_id))
 
     return appointments
 
