@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 
 from app_types import DayRange, Appointment
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
 config = yaml.safe_load(open('config.yml'))
@@ -48,8 +49,7 @@ def find_appointment() -> Optional[Appointment]:
         'step_current': 'services',
         'step_current_index': 0,
         'step_goto': '+1',
-        'services': [],
-        'service_d29a92ab-4112-40c5-b772-427ce186cc35_amount': 1
+        'services': []
     }
     for service in services:
         request_data['services'].append(service['type'])
@@ -58,10 +58,10 @@ def find_appointment() -> Optional[Appointment]:
     request = httpx.post(base_url + '?' + urlencode({'uid': calendar_uid, 'wsid': ws_id}), data=request_data)
 
     soup = BeautifulSoup(request.text, 'html.parser')
-    token_element = soup.find(attrs={'name': 'request_verification_token'})
+    token_element = soup.find(attrs={'name': '__RequestVerificationToken'})
 
     request = httpx.post(base_url + '?' + urlencode({'uid': calendar_uid, 'wsid': ws_id}), data={
-        'request_verification_token': token_element['value'],
+        '__RequestVerificationToken': token_element['value'],
         'action_type': 'search',
         'steps': 'serviceslocationssearch_resultsbookingfinish',
         'step_current': 'locations',
@@ -71,7 +71,7 @@ def find_appointment() -> Optional[Appointment]:
     })
 
     soup = BeautifulSoup(request.text, 'html.parser')
-    appointment_elements = soup.findAll('button', {'class': 'card'})
+    appointment_elements = soup.find_all('button', {'class': 'card'})
     appointments = extract_appointments(appointment_elements, ws_id)
 
     valid_appointments = []
