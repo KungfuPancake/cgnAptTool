@@ -83,7 +83,7 @@ def find_appointment() -> Optional[Appointment]:
                 # appointment is too far in the future
                 continue
 
-            if appointment.date.date() > (date.today() + timedelta(days=min_days_ahead)):
+            if appointment.date.date() < (date.today() + timedelta(days=min_days_ahead)):
                 # appointment is too soon
                 continue
 
@@ -152,4 +152,4 @@ while True:
     except httpx.RequestError:
         logger.error("An error occured, discarding session")
 
-    sleep(30)
+    sleep(60)
